@@ -1,0 +1,24 @@
+Below are online resources that I referrenced during this project.
+
+http://scikit-learn.org/stable/modules/generated/sklearn.decomposition.RandomizedPCA.html
+
+http://scikit-learn.org/stable/modules/generated/sklearn.neighbors.KNeighborsClassifier.html
+
+http://scikit-learn.org/stable/auto_examples/neighbors/plot_classification.html
+
+http://scikit-learn.org/stable/modules/generated/sklearn.svm.SVC.html
+
+http://scikit-learn.org/stable/modules/generated/sklearn.neighbors.BallTree.html#sklearn.neighbors.BallTree
+
+http://scikit-learn.org/stable/modules/generated/sklearn.neighbors.KDTree.html#sklearn.neighbors.KDTree
+
+http://scikit-learn.org/stable/modules/generated/sklearn.neighbors.KNeighborsClassifier.html#sklearn.neighbors.KNeighborsClassifier.fit
+
+http://scikit-learn.org/stable/modules/generated/sklearn.feature_extraction.DictVectorizer.html#sklearn.feature_extraction.DictVectorizer.fit
+
+http://scikit-learn.org/stable/modules/generated/sklearn.metrics.precision_score.html
+
+http://stats.stackexchange.com/questions/140266/classifier-with-adjustable-precision-vs-recall
+
+I hereby confirm that this submission is my work. I have cited above the origins of any parts of the submission that were taken from Websites, 
+books, forums, blog posts, github repositories, etc.
