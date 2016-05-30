@@ -20,5 +20,11 @@ http://scikit-learn.org/stable/modules/generated/sklearn.metrics.precision_score
 
 http://stats.stackexchange.com/questions/140266/classifier-with-adjustable-precision-vs-recall
 
+http://scikit-learn.org/stable/modules/generated/sklearn.cross_validation.StratifiedKFold.html
+
+http://stackoverflow.com/questions/24215886/typeerror-when-attempting-cross-validation-in-sklearn
+
+http://scikit-learn.org/stable/modules/preprocessing.html#preprocessing-scaler
+
 I hereby confirm that this submission is my work. I have cited above the origins of any parts of the submission that were taken from Websites, 
 books, forums, blog posts, github repositories, etc.
