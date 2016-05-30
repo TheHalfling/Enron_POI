@@ -7,14 +7,17 @@ sys.path.append("../tools/")
 
 from feature_format import featureFormat, targetFeatureSplit
 from tester import dump_classifier_and_data
+from sklearn.preprocessing import MinMaxScaler
+import numpy as np
+
+
 
 ### Task 1: Select what features you'll use.
 ### features_list is a list of strings, each of which is a feature name.
 ### The first feature must be "poi".
 ### Added in a number of features to the original list of poi and salary
 features_list = ['poi','salary', 'director_fees', 'total_stock_value',
-                 'total_payments', 'exercised_stock_options',
-                 'from_poi_to_this_person', 'deferral_payments'
+                 'total_payments', 'exercised_stock_options'
                  ] # You will need to use more features
 
 
@@ -30,12 +33,16 @@ data_dict.pop("TOTAL",0)
 ### Store to my_dataset for easy export below.
 my_dataset = data_dict
 
+poi_count = 0
+non_poi_count = 0
+      
+
 ### create new feature that is the ration of emails comparing those sent to
 ### those received.  Intention is to show a pattern of communication.
 for x in my_dataset:
     if (my_dataset[x]['from_this_person_to_poi'] == 'NaN') or (my_dataset[x]
     ['from_poi_to_this_person'] == 'NaN'):
-        my_dataset[x]['email_ratio'] = 0.0
+        my_dataset[x]['email_ratio'] = 0.0      
     elif my_dataset[x]['from_poi_to_this_person'] != 0:
         my_dataset[x]['email_ratio'] = float(float(my_dataset[x]
         ['from_this_person_to_poi'])/
@@ -43,10 +50,39 @@ for x in my_dataset:
     else:
         my_dataset[x]['email_ratio'] = 0.0
       
+### determine count of poi to non-poi for reporting
+for person in my_dataset:
+    if my_dataset[person]['poi'] == True:
+        poi_count += 1
+    elif my_dataset[person]['poi'] == False:
+        non_poi_count += 1
+
+print '# of POI ', poi_count
+print '# of Non-POI ', non_poi_count
+
+### create count of NaN values to non-NaN values for reporting
+### Also convert NaN values to 0.0 float       
+for i in range(0, len(features_list)):
+    nan_count = 0
+    non_nan_count = 0
+    for person in my_dataset:      
+        if my_dataset[person][features_list[i]] == 'NaN':
+            my_dataset[person][features_list[i]] = float(0.0)
+            nan_count += 1
+        else:
+            non_nan_count += 1
+    print features_list[i], 'has',nan_count, 'NaN results'
+    print features_list[i], 'has',non_nan_count, 'populated results'
+
 
 ### Extract features and labels from dataset for local testing
 data = featureFormat(my_dataset, features_list, sort_keys = True)
 labels, features = targetFeatureSplit(data)
+
+labels = np.array(labels)
+features = np.array(features)
+
+
 
 ### Task 4: Try a varity of classifiers
 ### Please name your classifier clf for easy export below.
@@ -57,11 +93,22 @@ labels, features = targetFeatureSplit(data)
 ### Also tried those classifiers listed below, but did not acheive desired 
 ### results with them.
 
-# clf = GaussianNB()
-# clf = tree.DecisionTreeClassifier(max_depth = 10)
-# clf = tree.DecisionTreeClassifier()
-# clf = AdaBoostClassifier(n_estimators = 100)
 
+#from sklearn.naive_bayes import GaussianNB
+#clf = GaussianNB()
+
+#from sklearn import tree
+#clf = tree.DecisionTreeClassifier(max_depth = 10)
+
+#from sklearn import tree
+#clf = tree.DecisionTreeClassifier()
+
+#from sklearn.ensemble import AdaBoostClassifier
+#clf = AdaBoostClassifier(n_estimators = 100)
+
+
+# Found the best results using this algorithm
+# Also tried n_neightbors 2 and 5, as well as weights of distance
 
 from sklearn.neighbors import KNeighborsClassifier
 clf = KNeighborsClassifier(n_neighbors=3, weights='uniform')
@@ -76,11 +123,24 @@ clf = KNeighborsClassifier(n_neighbors=3, weights='uniform')
 # Example starting point. Try investigating other evaluation techniques!
 
 from sklearn.metrics import accuracy_score
+from sklearn.cross_validation import StratifiedKFold
 
-from sklearn.cross_validation import train_test_split
-features_train, features_test, labels_train, labels_test = \
-    train_test_split(features, labels, test_size=0.3, random_state=42)
- 
+#from sklearn.cross_validation import train_test_split
+#features_train, features_test, labels_train, labels_test = \
+#    train_test_split(features, labels, test_size=0.3, random_state=42)
+
+skf = StratifiedKFold(labels, n_folds=3)
+
+
+for train_index, test_index in skf:
+    features_train, features_test = features[train_index], features[test_index]
+    labels_train, labels_test = labels[train_index], labels[test_index]
+
+min_max_scaler = MinMaxScaler()
+features_train_minmax = min_max_scaler.fit_transform(features_train)
+print "Features Train:",features_train
+print "Features Train MinMax:", features_train_minmax
+
 clf.fit(features_train, labels_train)
  
  
